@@ -36,10 +36,10 @@ if __name__== '__main__':
                     exit()
 
                 relics, total_relics = web_scraper.get_relics(page)
-
+                
                 with open("StarRailRelicsData.csv", 'w') as file:
                     csvwriter = csv.writer(file)
-                    file.write("Name, Icon, Rarity, Rarity Icon, Path, Path Icon, Element, Element Icon\n")
+                    file.write("Name, Icon, Helmet Name, Helmet icon, Guantlet Name, Guantlet Icon, Chest Name, Chest Icon, Boots Name, Boots Icon, Bonus Desc\n")
 
                     for index in range(0, total_relics):
                         for key in relics:

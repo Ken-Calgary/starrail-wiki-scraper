@@ -58,7 +58,8 @@ def get_relics(page):
     page -- The html page of the website
     """
     soup = BeautifulSoup(page, "html.parser")
-    relics = dict(set_icon=[], set_name=[], pieces_name=[], pieces_icon=[], bonuses=[])
+    relics = dict(set_name=[], set_icon=[], helmet_piece=[], helmet_icon=[], guantlet_piece=[], guantlet_icon=[],
+                  chest_piece=[], chest_icon=[], boots_name=[], boots_icon=[], bonuses=[])
 
     # Gets only the specified html attribute using regex
     pattern_src = r'src="(.*?)"'
@@ -94,7 +95,8 @@ def get_relics(page):
         
         bonus_desc = _remove_html_attributes(bonus_desc_html[index])
         
-        set_info = dict(set_icon=set_icon, set_name=set_name, pieces_name=pieces_name, pieces_icon=pieces_icon, bonuses=bonus_desc)
+        set_info = dict(set_name=set_name, set_icon=set_icon, helmet_piece=pieces_name[0], helmet_icon=pieces_icon[0], guantlet_piece=pieces_name[1], 
+                        guantlet_icon=pieces_icon[1], chest_piece=pieces_name[2], chest_icon=pieces_icon[2], boots_name=pieces_name[3], boots_icon=pieces_icon[3], bonuses=bonus_desc)
 
         for key in relics:
             relics[key].append(set_info[key])
@@ -120,4 +122,4 @@ def _remove_html_attributes(html):
     attribute_removal_pattern = r'<.*?>'
     string = re.sub(pattern=attribute_removal_pattern, repl='' ,string=str(html))
     
-    return string
+    return string.strip()
