@@ -50,7 +50,25 @@ if __name__== '__main__':
                 continue
 
             case "3":
-                print("case3")
+                try:
+                    page = web_scraper.get_page("https://honkai-star-rail.fandom.com/wiki/Relic/Sets")
+                except:
+                    print("Unable to acess the webpage")
+                    exit()
+
+                planars, total_planars = web_scraper.get_planars(page)
+                
+                with open("StarRailPlanarsData.csv", 'w') as file:
+                    csvwriter = csv.writer(file)
+                    file.write("Name, Icon, Sphere, Sphere Icon, Link Rope, Link Rope Icon, Bonus Desc\n")
+
+                    for index in range(0, total_planars):
+                        for key in planars:
+                            file.write(f"{planars[key][index]},")
+                        file.write(f"\n")
+
+                print("Successfully written Star Rail Relics Data into csv file.\n")
+                continue
 
             case "4":
                 print("Exiting...")

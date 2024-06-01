@@ -111,7 +111,50 @@ def get_planars(page):
     page -- The html page of the website
     """
     soup = BeautifulSoup(page, "html.parser")
-    planars = dict(icon=[], set=[], pieces=[], bonuses=[])
+    planars = dict(set=[], set_icon=[], sphere=[], sphere_icon=[], link_rope=[], link_rope_icon=[], bonus=[])
+
+    # Gets only the specified html attribute using regex
+    pattern_src = r'src="(.*?)"'
+    pattern_title = r'title="(.*?)"'
+
+    # Gets total number of planars
+    total_planars = int(str(soup.find_all("b")[48]).replace("<b>", "").replace("</b>", ""))
+    total_relics = int(str(soup.find_all("b")[2]).replace("<b>", "").replace("</b>", ""))
+
+    all_table_rows = soup.find_all("tr")
+    bonus_desc_html = soup.find_all(id="mw-customcollapsible-relicsettable")
+
+    for index in range(total_relics + 2, total_planars + total_relics + 2):
+        # Pattern to seperate the different tags/attributes
+        title_elements = re.findall(pattern=pattern_title, string=str(all_table_rows[index]))
+        src_elements = re.findall(pattern=pattern_src, string = str(all_table_rows[index]))\
+        
+        set_name = title_elements[0]
+        pieces_name = []
+
+        # Store both set piece names (planar and link rope)
+        for piece_index in range(2, len(title_elements), 2):
+            if len(pieces_name) == 2:
+                break
+            else:
+                pieces_name.append(title_elements[piece_index])
+
+        set_icon = src_elements[0]
+        pieces_icon = []
+
+        # Store both piece icons
+        for piece_index in range(2, len(src_elements), 4):
+            pieces_icon.append(src_elements[piece_index])
+        
+        bonus_desc = _remove_html_attributes(bonus_desc_html[index])
+
+        set_info = dict(set=set_name, set_icon=set_icon, sphere=pieces_name[0], sphere_icon=pieces_icon[0], link_rope=pieces_name[1], 
+                        link_rope_icon=pieces_icon[1], bonus=bonus_desc)
+        
+        for key in planars:
+            planars[key].append(set_info[key])
+
+    return planars, total_planars
 
 def _remove_html_attributes(html):
     """
